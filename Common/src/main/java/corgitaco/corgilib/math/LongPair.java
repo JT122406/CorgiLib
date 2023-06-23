@@ -3,23 +3,7 @@ package corgitaco.corgilib.math;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-public class LongPair {
-
-    private final long val1;
-    private final long val2;
-
-    public LongPair(long val1, long val2) {
-        this.val1 = val1;
-        this.val2 = val2;
-    }
-
-    public long getVal1() {
-        return val1;
-    }
-
-    public long getVal2() {
-        return val2;
-    }
+public record LongPair(long val1, long val2) {
 
     public boolean isInBetween(long l) {
         return l >= this.val1 && l <= this.val2;

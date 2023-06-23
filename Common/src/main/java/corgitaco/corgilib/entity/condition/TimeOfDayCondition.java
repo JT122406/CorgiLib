@@ -22,7 +22,7 @@ public class TimeOfDayCondition implements Condition {
         }
         this.timesOfDay = timesOfDay;
         for (LongPair longPair : this.timesOfDay) {
-            if (longPair.getVal1() > this.dayLength || longPair.getVal1() < 0 || longPair.getVal2() > this.dayLength || longPair.getVal2() < 0 || longPair.getVal1() > longPair.getVal2()) {
+            if (longPair.val1() > this.dayLength || longPair.val1() < 0 || longPair.val2() > this.dayLength || longPair.val2() < 0 || longPair.val1() > longPair.val2()) {
                 throw new IllegalArgumentException("minTime & maxTime must be between 0 & " + dayLength + " and minTime cannot be greater than maxTime! Pair: \"" + longPair + "\" failed.");
             }
         }
