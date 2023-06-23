@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
@@ -50,26 +49,26 @@ public class FabricNetworkHandler {
     }
 
 
+    @SuppressWarnings("unchecked")
     public static <MSG extends Packet> void sendToPlayer(ServerPlayer player, MSG packet) {
-        ResourceLocation packetId = PACKET_IDS.get(packet.getClass());
-        @SuppressWarnings("unchecked")
-        BiConsumer<MSG, FriendlyByteBuf> encoder = (BiConsumer<MSG, FriendlyByteBuf>) ENCODERS.get(packet.getClass());
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        encoder.accept(packet, buf);
-        ServerPlayNetworking.send(player, packetId, buf);
+        ((BiConsumer<MSG, FriendlyByteBuf>) ENCODERS.get(packet.getClass())).accept(packet, buf);
+        ServerPlayNetworking.send(player, getPacketId(packet), buf);
     }
 
     public static <MSG extends Packet> void sendToAllPlayers(List<ServerPlayer> players, MSG packet) {
         players.forEach(player -> sendToPlayer(player, packet));
     }
 
+    @SuppressWarnings("unchecked")
     public static <MSG extends Packet> void sendToServer(MSG packet) {
-        ResourceLocation packetId = PACKET_IDS.get(packet.getClass());
-        @SuppressWarnings("unchecked")
-        BiConsumer<MSG, FriendlyByteBuf> encoder = (BiConsumer<MSG, FriendlyByteBuf>) ENCODERS.get(packet.getClass());
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        encoder.accept(packet, buf);
-        ClientPlayNetworking.send(packetId, buf);
+        ((BiConsumer<MSG, FriendlyByteBuf>) ENCODERS.get(packet.getClass())).accept(packet, buf);
+        ClientPlayNetworking.send(getPacketId(packet), buf);
+    }
+
+    private static ResourceLocation getPacketId(Packet packet) {
+        return PACKET_IDS.get(packet.getClass());
     }
 
     public record ClientProxy() {
@@ -79,11 +78,10 @@ public class FabricNetworkHandler {
             ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(PACKET_LOCATION, id), (client, listener, buf, responseSender) -> {
                 buf.retain();
                 client.execute(() -> {
-                    T packet = decode.apply(buf);
                     ClientLevel level = client.level;
                     if (level != null) {
                         try {
-                            handler.handle(packet, level, Minecraft.getInstance().player);
+                            handler.handle(decode.apply(buf), level, Minecraft.getInstance().player);
                         } catch (Throwable throwable) {
                             CorgiLib.LOGGER.error("Packet failed: ", throwable);
                             throw throwable;
@@ -100,15 +98,11 @@ public class FabricNetworkHandler {
             ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(PACKET_LOCATION, id), (server, player, handler1, buf, responseSender) -> {
                 buf.retain();
                 server.execute(() -> {
-                    T packet = decode.apply(buf);
-                    ServerLevel level = player.getLevel();
-                    if (level != null) {
-                        try {
-                            handler.handle(packet, level, player);
-                        } catch (Throwable throwable) {
-                            CorgiLib.LOGGER.error("Packet failed: ", throwable);
-                            throw throwable;
-                        }
+                    try {
+                        handler.handle(decode.apply(buf), player.getLevel(), player);
+                    } catch (Throwable throwable) {
+                        CorgiLib.LOGGER.error("Packet failed: ", throwable);
+                        throw throwable;
                     }
                     buf.release();
                 });

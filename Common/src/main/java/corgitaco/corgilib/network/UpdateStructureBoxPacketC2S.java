@@ -36,10 +36,8 @@ public record UpdateStructureBoxPacketC2S(BlockPos pos, BlockPos structureOffset
 
     @Override
     public void handle(@Nullable Level level, @Nullable Player player) {
-        if (!level.isClientSide) {
-            BlockEntity blockEntity = level.getBlockEntity(this.pos);
-
-            if (blockEntity instanceof StructureBlockEntity structureBlockEntity) {
+        if (level != null && !level.isClientSide()) {
+            if (level.getBlockEntity(this.pos) instanceof StructureBlockEntity structureBlockEntity) {
                 structureBlockEntity.setStructurePos(new BlockPos(structureOffset.getX(), structureOffset.getY(), structureOffset.getZ()));
                 structureBlockEntity.setStructureSize(box.getLength());
                 structureBlockEntity.setChanged();
