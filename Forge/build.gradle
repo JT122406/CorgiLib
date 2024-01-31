@@ -219,3 +219,22 @@ tasks.forge_checkForRefmap.mustRunAfter tasks.build
 tasks.forge_publishCurseForge.mustRunAfter tasks.forge_checkForRefmap
 tasks.forge_publishModrinth.mustRunAfter tasks.forge_publishCurseForge
 tasks.forge_buildAndReleaseModrinthAndCurseforge.dependsOn(tasks.build, tasks.forge_checkForRefmap, tasks.forge_publishCurseForge, tasks.forge_publishModrinth)
+publishing {
+    publications {
+        mavenForge(MavenPublication) {
+            artifactId = archivesBaseName.toString()
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url = "https://maven.jt-dev.tech/releases"
+            name = "jt-dev"
+            credentials {
+                username =
+                password = 
+            }
+        }
+    }
+}

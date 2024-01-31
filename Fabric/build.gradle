@@ -186,3 +186,23 @@ tasks.fabric_checkForRefmap.mustRunAfter tasks.build
 tasks.fabric_publishCurseForge.mustRunAfter tasks.fabric_checkForRefmap
 tasks.fabric_publishModrinth.mustRunAfter tasks.fabric_publishCurseForge
 tasks.fabric_buildAndReleaseModrinthAndCurseforge.dependsOn(tasks.build, tasks.fabric_checkForRefmap, tasks.fabric_publishCurseForge, tasks.fabric_publishModrinth)
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifactId = archivesBaseName.toString()
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url = "https://maven.jt-dev.tech/releases"
+            name = "jt-dev"
+            credentials {
+                username =
+                password = 
+            }
+        }
+    }
+}

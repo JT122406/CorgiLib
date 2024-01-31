@@ -50,3 +50,23 @@ processResources {
 tasks.withType(Javadoc) {
     failOnError false
 }
+
+publishing {
+    publications {
+        mavenCommon(MavenPublication) {
+            artifactId = archivesBaseName.toString()
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url = "https://maven.jt-dev.tech/releases"
+            name = "jt-dev"
+            credentials {
+                username =
+                password = 
+            }
+        }
+    }
+}
