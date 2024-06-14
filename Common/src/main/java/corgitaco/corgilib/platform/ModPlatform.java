@@ -37,17 +37,6 @@ public interface ModPlatform {
 
     Collection<String> getModIDS();
 
-
-    <P extends Packet> void sendToClient(ServerPlayer player, P packet);
-
-    default <P extends Packet> void sendToAllClients(List<ServerPlayer> players, P packet) {
-        for (ServerPlayer player : players) {
-            sendToClient(player, packet);
-        }
-    }
-
-    <P extends Packet> void sendToServer(P packet);
-
     Path configDir();
 
     default Path modConfigDir() {

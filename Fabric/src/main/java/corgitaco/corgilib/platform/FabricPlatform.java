@@ -2,10 +2,7 @@ package corgitaco.corgilib.platform;
 
 import com.google.auto.service.AutoService;
 import com.google.common.base.Suppliers;
-import corgitaco.corgilib.network.FabricNetworkHandler;
-import corgitaco.corgilib.network.Packet;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.server.level.ServerPlayer;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -32,15 +29,6 @@ public class FabricPlatform implements ModPlatform {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
     }
 
-    @Override
-    public <P extends Packet> void sendToClient(ServerPlayer player, P packet) {
-        FabricNetworkHandler.sendToPlayer(player, packet);
-    }
-
-    @Override
-    public <P extends Packet> void sendToServer(P packet) {
-        FabricNetworkHandler.sendToServer(packet);
-    }
 
     @Override
     public Path configDir() {

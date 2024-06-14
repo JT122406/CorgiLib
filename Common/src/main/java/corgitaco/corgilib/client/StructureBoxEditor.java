@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import corgitaco.corgilib.network.UpdateStructureBoxPacketC2S;
 import corgitaco.corgilib.platform.ModPlatform;
+import corgitaco.corgilib.platform.PlatformNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -76,13 +77,13 @@ public class StructureBoxEditor {
                     double zStep = opposite.getStepZ() * scrollValue;
                     if (isKeyDown(Minecraft.getInstance(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
                         structureBox = new AABB(structureBox.minX, structureBox.minY, structureBox.minZ, Math.max(structureBox.minX + 1, structureBox.maxX + xStep), Math.max(structureBox.minY + 1, structureBox.maxY + yStep), Math.max(structureBox.minZ + 1, structureBox.maxZ + zStep));
-                        ModPlatform.PLATFORM.sendToServer(new UpdateStructureBoxPacketC2S(structureBlockPos, structureOffset, new BoundingBox((int) structureBox.minX, (int) structureBox.minY, (int) structureBox.minZ, (int) structureBox.maxX, (int) structureBox.maxY, (int) structureBox.maxZ)));
+                        PlatformNetwork.NETWORK.sendToServer(new UpdateStructureBoxPacketC2S(structureBlockPos, structureOffset, new BoundingBox((int) structureBox.minX, (int) structureBox.minY, (int) structureBox.minZ, (int) structureBox.maxX, (int) structureBox.maxY, (int) structureBox.maxZ)));
                         return true;
                     }
 
                     if (isKeyDown(Minecraft.getInstance(), GLFW.GLFW_KEY_LEFT_CONTROL)) {
                         structureOffset = structureOffset.offset((int) xStep, (int) yStep, (int) zStep);
-                        ModPlatform.PLATFORM.sendToServer(new UpdateStructureBoxPacketC2S(structureBlockPos, structureOffset, new BoundingBox((int) structureBox.minX, (int) structureBox.minY, (int) structureBox.minZ, (int) structureBox.maxX, (int) structureBox.maxY, (int) structureBox.maxZ)));
+                        PlatformNetwork.NETWORK.sendToServer(new UpdateStructureBoxPacketC2S(structureBlockPos, structureOffset, new BoundingBox((int) structureBox.minX, (int) structureBox.minY, (int) structureBox.minZ, (int) structureBox.maxX, (int) structureBox.maxY, (int) structureBox.maxZ)));
                         return true;
                     }
                 }

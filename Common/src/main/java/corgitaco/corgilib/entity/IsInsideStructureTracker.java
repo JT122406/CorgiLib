@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket;
 import corgitaco.corgilib.platform.ModPlatform;
+import corgitaco.corgilib.platform.PlatformNetwork;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -15,7 +16,7 @@ public class IsInsideStructureTracker {
     public void setInside(Level world, Entity entity, IsInside isInside) {
         this.tracker = isInside;
         if (!world.isClientSide) {
-            ModPlatform.PLATFORM.sendToAllClients(((ServerLevel) world).players(), new EntityIsInsideStructureTrackerUpdatePacket(entity.getId(), isInside));
+            PlatformNetwork.NETWORK.sendToAllClients(((ServerLevel) world).players(), new EntityIsInsideStructureTrackerUpdatePacket(entity.getId(), isInside));
         }
     }
 

@@ -36,16 +36,6 @@ public class ForgePlatform implements ModPlatform {
     }
 
     @Override
-    public <P extends Packet> void sendToClient(ServerPlayer player, P packet) {
-        ForgeNetworkHandler.sendToPlayer(player, packet);
-    }
-
-    @Override
-    public <P extends Packet> void sendToServer(P packet) {
-        ForgeNetworkHandler.sendToServer(packet);
-    }
-
-    @Override
     public Path configDir() {
         return FMLPaths.CONFIGDIR.get();
     }
