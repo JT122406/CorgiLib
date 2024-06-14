@@ -4,6 +4,7 @@
   "package": "corgitaco.corgilib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "DelegatingOpsMixin",
     "MixinEntity",
     "MixinServerLevel",
     "MixinStructureBlock",

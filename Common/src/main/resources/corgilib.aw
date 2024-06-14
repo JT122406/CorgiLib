@@ -46,6 +46,7 @@ Accessible field net/minecraft/world/entity/npc/VillagerTrades$TreasureMapForEme
 Accessible field net/minecraft/world/entity/npc/VillagerTrades$TreasureMapForEmeralds maxUses I
 Accessible field net/minecraft/world/entity/npc/VillagerTrades$TreasureMapForEmeralds villagerXp I
 Accessible field net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate palettes Ljava/util/List;
+accessible field net/minecraft/resources/DelegatingOps delegate Lcom/mojang/serialization/DynamicOps;
 Accessible method net/minecraft/world/entity/Display setViewRange (F)V
 Accessible method net/minecraft/world/entity/Display setTransformation (Lcom/mojang/math/Transformation;)V
 Accessible method net/minecraft/world/entity/Display$TextDisplay setText (Lnet/minecraft/network/chat/Component;)V
