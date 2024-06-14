@@ -1,3 +1,6 @@
+# 4.0.1.2
+* Fix Codec comments in delegated DynamicOps
+
 # 4.0.1.1
 * Fix Crashing when running on MacOS
 
