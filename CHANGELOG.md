@@ -1,3 +1,7 @@
+# 4.0.1.3
+* Fix a crash with mixin where we were referencing MC classes in the Mixin plugin.
+* Code base cleanup.
+
 # 4.0.1.2
 * Fix Codec comments in delegated DynamicOps
 
