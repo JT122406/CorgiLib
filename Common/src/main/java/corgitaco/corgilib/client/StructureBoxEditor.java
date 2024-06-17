@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import corgitaco.corgilib.network.UpdateStructureBoxPacketC2S;
-import corgitaco.corgilib.platform.ModPlatform;
 import corgitaco.corgilib.platform.PlatformNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

@@ -1,12 +1,9 @@
 package corgitaco.corgilib.platform;
 
 import corgitaco.corgilib.CorgiLib;
-import corgitaco.corgilib.network.Packet;
-import net.minecraft.server.level.ServerPlayer;
 
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
 import java.util.ServiceLoader;
 
 public interface ModPlatform {

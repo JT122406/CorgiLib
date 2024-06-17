@@ -6,7 +6,8 @@ package corgitaco.corgilib.client.imgui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import corgitaco.corgilib.CorgiLib;
-import imgui.*;
+import imgui.ImGui;
+import imgui.ImGuiIO;
 import imgui.extension.implot.ImPlot;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
