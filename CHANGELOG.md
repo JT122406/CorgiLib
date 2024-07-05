@@ -1,3 +1,6 @@
+# 4.0.1.4
+* Allow the ability to set a custom easeInCirc blending function exponent. For BWG's Dead Sea rocks.
+
 # 4.0.1.3
 * Fix a crash with mixin where we were referencing MC classes in the Mixin plugin.
 * Code base cleanup.

@@ -41,8 +41,8 @@ public class BlendingFunctions {
 
     }
 
-    public static double easeInCirc(double x) {
-        return 1 - sqrt(1 - pow(x, 2));
+    public static double easeInCirc(double x, double exponent) {
+        return 1 - sqrt(1 - pow(x, exponent));
     }
 
     public static double easeOutQuint(double x) {

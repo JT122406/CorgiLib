@@ -1,6 +1,7 @@
 package corgitaco.corgilib.math.blendingfunction;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import corgitaco.corgilib.CorgiLib;
 import corgitaco.corgilib.core.CorgiLibRegistry;
 import corgitaco.corgilib.reg.RegistrationProvider;
@@ -95,13 +96,17 @@ public interface BlendingFunction {
         }
     }
 
-    record EaseInCirc() implements BlendingFunction {
-        public static final EaseInCirc INSTANCE = new EaseInCirc();
-        public static final Codec<EaseInCirc> CODEC = Codec.unit(() -> INSTANCE);
+    record EaseInCirc(double exponent) implements BlendingFunction {
+        public static final EaseInCirc INSTANCE = new EaseInCirc(2.0);
+        public static final Codec<EaseInCirc> CODEC = RecordCodecBuilder.create(instance ->
+                instance.group(
+                        Codec.DOUBLE.fieldOf("exponent").forGetter(EaseInCirc::exponent)
+                ).apply(instance, EaseInCirc::new)
+        );
 
         @Override
         public double apply(double factor) {
-            return BlendingFunctions.easeInCirc(factor);
+            return BlendingFunctions.easeInCirc(factor, this.exponent);
         }
 
         @Override
