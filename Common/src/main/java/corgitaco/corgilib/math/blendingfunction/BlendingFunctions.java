@@ -30,14 +30,14 @@ public class BlendingFunctions {
         }
     }
 
-    public static double easeOutElastic(double x) {
+    public static double easeOutElastic(double x, double intensity) {
         double c4 = (2 * Math.PI) / 3;
 
         return x == 0
             ? 0
             : x == 1
             ? 1
-            : pow(2, -10 * x) * sin((x * 10 - 0.75) * c4) + 1;
+            : pow(2, -intensity * x) * sin((x * 10 - 0.75) * c4) + 1;
 
     }
 

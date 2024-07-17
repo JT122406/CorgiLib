@@ -10,6 +10,7 @@ import java.util.function.Function;
 
 public interface BlendingFunction {
     Codec<BlendingFunction> CODEC = ExtraCodecs.lazyInitializedCodec(() -> CorgiLibRegistry.BLENDING_FUNCTION.get().byNameCodec().dispatchStable(BlendingFunction::codec, Function.identity()));
+
     Codec<? extends BlendingFunction> codec();
 
     double apply(double factor);
@@ -78,13 +79,17 @@ public interface BlendingFunction {
         }
     }
 
-    record EaseOutElastic() implements BlendingFunction {
-        public static final EaseOutElastic INSTANCE = new EaseOutElastic();
-        public static final Codec<EaseOutElastic> CODEC = Codec.unit(() -> INSTANCE);
+    record EaseOutElastic(double intensity) implements BlendingFunction {
+        public static final EaseOutElastic INSTANCE = new EaseOutElastic(10);
+        public static final Codec<EaseOutElastic> CODEC = RecordCodecBuilder.create(builder ->
+                builder.group(
+                        Codec.DOUBLE.fieldOf("intensity").forGetter(EaseOutElastic::intensity)
+                ).apply(builder, EaseOutElastic::new)
+        );
 
         @Override
         public double apply(double factor) {
-            return BlendingFunctions.easeOutElastic(factor);
+            return BlendingFunctions.easeOutElastic(factor, this.intensity);
         }
 
         @Override
