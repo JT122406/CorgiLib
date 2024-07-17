@@ -1,10 +1,14 @@
 package corgitaco.corgilib.platform;
 
+import com.mojang.serialization.Codec;
 import corgitaco.corgilib.CorgiLib;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.ServiceLoader;
+import java.util.function.Supplier;
 
 public interface ModPlatform {
     ModPlatform PLATFORM = load(ModPlatform.class);
@@ -48,4 +52,10 @@ public interface ModPlatform {
         CorgiLib.LOGGER.debug("Loaded {} for service {}", loadedService, clazz);
         return loadedService;
     }
+
+    <T> Supplier<T> register(Registry<T> registry, String name, Supplier<T> value);
+
+    <T> Supplier<Registry<T>> createSimpleBuiltin(ResourceKey<Registry<T>> registryKey);
+
+    <T> void registerDatapackRegistry(ResourceKey<Registry<T>> key, Supplier<Codec<T>> codec);
 }
