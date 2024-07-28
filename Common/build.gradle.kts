@@ -26,15 +26,16 @@ dependencies {
 
 publishing {
     publications.create<MavenPublication>("mavenCommon") {
-        artifactId = "${project.properties["archives_base_name"]}" + "-Common"
+        artifactId = "${project.properties["archives_base_name"]}" + "-common"
+        version = "$minecraftVersion-" + project.version.toString()
         from(components["java"])
     }
 
     repositories {
         mavenLocal()
         maven {
-            val releasesRepoUrl = "https://example.com/releases"
-            val snapshotsRepoUrl = "https://example.com/snapshots"
+            val releasesRepoUrl = "https://maven.jt-dev.tech/releases"
+            val snapshotsRepoUrl = "https://maven.jt-dev.tech/snapshots"
             url = uri(if (project.version.toString().endsWith("SNAPSHOT") || project.version.toString().startsWith("0")) snapshotsRepoUrl else releasesRepoUrl)
             name = "ExampleRepo"
             credentials {

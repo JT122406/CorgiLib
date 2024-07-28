@@ -13,7 +13,7 @@ architectury {
 }
 
 val minecraftVersion = project.properties["minecraft_version"] as String
-val jarName = base.archivesName.get() + "-fabric-" + project.properties["minecraft_version"]
+val jarName = base.archivesName.get() + "-fabric-$minecraftVersion"
 
 
 configurations {
@@ -37,11 +37,14 @@ dependencies {
     implementation("com.electronwill.night-config:core:${project.properties["nightconfig_version"]}")?.let { include(it) }
     include("blue.endless:jankson:${project.properties["jankson_version"]}")
 
-    include("io.github.spair:imgui-java-binding:${project.properties["imgui_version"]}")
-    include("io.github.spair:imgui-java-lwjgl3:${project.properties["imgui_version"]}")
+    "shadowCommon"("io.github.spair:imgui-java-binding:${project.properties["imgui_version"]}")
+    "shadowCommon"("io.github.spair:imgui-java-lwjgl3:${project.properties["imgui_version"]}") {
+        exclude(group = "org.lwjgl")
+        exclude(group = "org.lwjgl.lwjgl")
+    }
 
-    include("io.github.spair:imgui-java-natives-windows:${project.properties["imgui_version"]}")
-    include("io.github.spair:imgui-java-natives-linux:${project.properties["imgui_version"]}")
+    "shadowCommon"("io.github.spair:imgui-java-natives-windows:${project.properties["imgui_version"]}")
+    "shadowCommon"("io.github.spair:imgui-java-natives-linux:${project.properties["imgui_version"]}")
 }
 
 tasks {
@@ -55,8 +58,14 @@ tasks {
     }
 
     shadowJar {
+        exclude("architectury.common.json")
         configurations = listOf(project.configurations.getByName("shadowCommon"))
         archiveClassifier.set("dev-shadow")
+        relocate("io.github.spair:imgui-java-binding:${project.properties["imgui_version"]}", "${project.group}.relocated.imgui-java-binding")
+        relocate("io.github.spair:imgui-java-lwjgl3:${project.properties["imgui_version"]}", "${project.group}.relocated.imgui-java-lwjgl3")
+        relocate("io.github.spair:imgui-java-natives-linux:${project.properties["imgui_version"]}", "${project.group}.relocated.imgui-java-natives-linux")
+        relocate("io.github.spair:imgui-java-natives-windows:${project.properties["imgui_version"]}", "${project.group}.relocated.imgui-java-natives-windows")
+        relocate("io.github.spair:imgui-java-natives-macos:${project.properties["imgui_version"]}", "${project.group}.relocated.imgui-java-natives-macos")
     }
 
     remapJar {
@@ -92,8 +101,8 @@ publisher {
     modrinthID.set(project.properties["modrinth_id"].toString())
     githubRepo.set("https://github.com/CorgiTaco/Oh-The-Trees-Youll-Grow")
     setReleaseType(ReleaseType.BETA)
-    projectVersion.set(project.version.toString())
-    displayName.set(jarName  + "-" + project.properties["version"])
+    projectVersion.set("$minecraftVersion-${project.version}-fabric")
+    displayName.set(jarName)
     changelog.set(projectDir.toPath().parent.resolve("CHANGELOG.md").toFile().readText())
     artifact.set(tasks.remapJar)
     setGameVersions(minecraftVersion)
@@ -107,7 +116,8 @@ publisher {
 
 publishing {
     publications.create<MavenPublication>("mavenFabric") {
-        artifactId = jarName
+        artifactId = "${project.properties["archives_base_name"]}" + "-fabric"
+        version = "$minecraftVersion-" + project.version.toString()
         from(components["java"])
     }
 
