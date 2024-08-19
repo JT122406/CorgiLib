@@ -18,6 +18,9 @@
   "entrypoints": {
     "main": [
       "corgitaco.corgilib.fabric.CorgiLibFabric"
+    ],
+    "client": [
+      "corgitaco.corgilib.fabric.client.CorgiLibFabricClient"
     ]
   },
   "mixins": [

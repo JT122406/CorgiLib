@@ -42,7 +42,10 @@ accessible field net/minecraft/world/entity/npc/VillagerTrades$TreasureMapForEme
 accessible field net/minecraft/world/entity/npc/VillagerTrades$TreasureMapForEmeralds villagerXp I
 
 accessible field net/minecraft/resources/DelegatingOps delegate Lcom/mojang/serialization/DynamicOps;
+accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher playerRenderers Ljava/util/Map;
+
 accessible method net/minecraft/world/entity/Display setViewRange (F)V
 accessible method net/minecraft/world/entity/Display setTransformation (Lcom/mojang/math/Transformation;)V
 accessible method net/minecraft/world/entity/Display$TextDisplay setText (Lnet/minecraft/network/chat/Component;)V
 accessible method net/minecraft/world/entity/Display setBillboardConstraints (Lnet/minecraft/world/entity/Display$BillboardConstraints;)V
+accessible method net/minecraft/client/gui/screens/Screen addRenderableWidget (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
