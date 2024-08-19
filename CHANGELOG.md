@@ -1,5 +1,6 @@
 # 4.0.3.0
 * Remove Imgui
+* Add announcement widget
 
 # 4.0.2.0
 * Move Project to Arch Loom
