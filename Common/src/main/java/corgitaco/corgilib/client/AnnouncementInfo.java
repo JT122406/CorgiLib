@@ -11,6 +11,7 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import corgitaco.corgilib.CorgiLib;
 import corgitaco.corgilib.platform.ModPlatform;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ExtraCodecs;
@@ -26,6 +27,7 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public record AnnouncementInfo(Component title, Component desc, Component actionButtonText,
                                long timeStamp, String url) {
@@ -41,11 +43,14 @@ public record AnnouncementInfo(Component title, Component desc, Component action
                     Codec.STRING.fieldOf("action_link").forGetter(AnnouncementInfo::url)
             ).apply(announcementInfoInstance, AnnouncementInfo::new)
     );
-    public static AnnouncementInfo INSTANCE = AnnouncementInfo.getTimeCheckedAnnouncement();
+    public static CompletableFuture<AnnouncementInfo> INSTANCE = CompletableFuture.supplyAsync(AnnouncementInfo::getTimeCheckedAnnouncement, Util.backgroundExecutor());
 
 
     public static void saveStoredAnnouncementInfo() {
-        AnnouncementInfo announcementInfo = INSTANCE;
+        if (INSTANCE == null) {
+            return;
+        }
+        AnnouncementInfo announcementInfo = INSTANCE.getNow(null);
 
         if (announcementInfo == null) {
             return;

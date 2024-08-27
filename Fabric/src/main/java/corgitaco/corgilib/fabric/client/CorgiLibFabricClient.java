@@ -10,7 +10,7 @@ public class CorgiLibFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (AnnouncementInfo.INSTANCE != null) {
+            if (AnnouncementInfo.INSTANCE.getNow(null) != null) {
                 screen.addRenderableWidget(new AnnouncementWidget(scaledWidth, scaledHeight, 25, 25, Component.literal("")));
             }
         });

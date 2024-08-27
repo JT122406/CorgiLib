@@ -3,7 +3,6 @@ package corgitaco.corgilib.client.screen.widget;
 import com.google.common.collect.Lists;
 import corgitaco.corgilib.CorgiLib;
 import corgitaco.corgilib.client.AnnouncementInfo;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -34,12 +33,13 @@ public class AnnouncementWidget extends AbstractWidget {
         int renderX = guiWidth - 30 - maxWidth;
         int renderY = guiHeight - 10 - (Minecraft.getInstance().font.lineHeight * 3);
 
-        MultiLineTextWidget announcementHeader = new MultiLineTextWidget(renderX, renderY, AnnouncementInfo.INSTANCE.title(), Minecraft.getInstance().font).setCentered(true).setMaxWidth(maxWidth);
+        AnnouncementInfo announcementInfo = AnnouncementInfo.INSTANCE.getNow(null);
+        MultiLineTextWidget announcementHeader = new MultiLineTextWidget(renderX, renderY, announcementInfo.title(), Minecraft.getInstance().font).setCentered(true).setMaxWidth(maxWidth);
         int yOffset = announcementHeader.getHeight() + 15;
         addRenderableWidget(announcementHeader);
 
 
-        MultiLineTextWidget announcement = new MultiLineTextWidget(renderX, renderY + yOffset, AnnouncementInfo.INSTANCE.desc(), Minecraft.getInstance().font).setCentered(true).setMaxWidth(maxWidth);
+        MultiLineTextWidget announcement = new MultiLineTextWidget(renderX, renderY + yOffset, announcementInfo.desc(), Minecraft.getInstance().font).setCentered(true).setMaxWidth(maxWidth);
         yOffset += announcement.getHeight() + 5;
 
         addRenderableWidget(announcement);
@@ -47,7 +47,7 @@ public class AnnouncementWidget extends AbstractWidget {
 
         int buttonSpacing = (int) (announcement.getWidth() * 0.04);
 
-        Button takeMeThere = new Button.Builder(AnnouncementInfo.INSTANCE.actionButtonText(), ConfirmLinkScreen.confirmLink(AnnouncementInfo.INSTANCE.url(), Minecraft.getInstance().screen, false)).pos(renderX, renderY + yOffset).width(buttonWidth).build();
+        Button takeMeThere = new Button.Builder(announcementInfo.actionButtonText(), ConfirmLinkScreen.confirmLink(announcementInfo.url(), Minecraft.getInstance().screen, false)).pos(renderX, renderY + yOffset).width(buttonWidth).build();
 
         addRenderableWidget(takeMeThere);
 
