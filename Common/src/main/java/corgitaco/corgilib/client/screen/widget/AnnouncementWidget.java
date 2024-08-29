@@ -33,7 +33,7 @@ public class AnnouncementWidget extends AbstractWidget {
         int renderX = guiWidth - 30 - maxWidth;
         int renderY = guiHeight - 10 - (Minecraft.getInstance().font.lineHeight * 3);
 
-        AnnouncementInfo announcementInfo = AnnouncementInfo.INSTANCE.getNow(null);
+        AnnouncementInfo announcementInfo = AnnouncementInfo.getInstance();
         MultiLineTextWidget announcementHeader = new MultiLineTextWidget(renderX, renderY, announcementInfo.title(), Minecraft.getInstance().font).setCentered(true).setMaxWidth(maxWidth);
         int yOffset = announcementHeader.getHeight() + 15;
         addRenderableWidget(announcementHeader);

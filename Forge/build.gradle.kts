@@ -56,7 +56,7 @@ dependencies {
     "common"(project(":Common", "namedElements")) { isTransitive = false }
     "shadowBundle"(project(":Common", "transformProductionForge")) { isTransitive = false }
 
-    "shadowBundle"("blue.endless:jankson:${project.properties["jankson_version"]}")
+    implementation("blue.endless:jankson:${project.properties["jankson_version"]}")?.let { "shadowBundle"(it) }
 }
 
 tasks {

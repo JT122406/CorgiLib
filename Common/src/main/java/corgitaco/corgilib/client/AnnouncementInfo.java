@@ -43,7 +43,7 @@ public record AnnouncementInfo(Component title, Component desc, Component action
                     Codec.STRING.fieldOf("action_link").forGetter(AnnouncementInfo::url)
             ).apply(announcementInfoInstance, AnnouncementInfo::new)
     );
-    public static CompletableFuture<AnnouncementInfo> INSTANCE = CompletableFuture.supplyAsync(AnnouncementInfo::getTimeCheckedAnnouncement, Util.backgroundExecutor());
+    private static CompletableFuture<AnnouncementInfo> INSTANCE = CompletableFuture.supplyAsync(AnnouncementInfo::getTimeCheckedAnnouncement, Util.backgroundExecutor());
 
 
     public static void saveStoredAnnouncementInfo() {
@@ -73,7 +73,7 @@ public record AnnouncementInfo(Component title, Component desc, Component action
 
     @Nullable
     private static AnnouncementInfo getTimeCheckedAnnouncement() {
-        AnnouncementInfo announcementInfo = getInstance();
+        AnnouncementInfo announcementInfo = createInstance();
 
         if (announcementInfo == null) {
             return null;
@@ -102,7 +102,7 @@ public record AnnouncementInfo(Component title, Component desc, Component action
 
 
     @Nullable
-    private static AnnouncementInfo getInstance() {
+    private static AnnouncementInfo createInstance() {
         JsonObject jsonObject = fetchAnnouncementJson(URL);
 
         if (jsonObject != null) {
@@ -141,6 +141,11 @@ public record AnnouncementInfo(Component title, Component desc, Component action
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Nullable
+    public static AnnouncementInfo getInstance() {
+        return INSTANCE == null ? null : INSTANCE.getNow(null);
     }
 
     private record StoredAnnouncementInfo(UUID player, long unixTime) {

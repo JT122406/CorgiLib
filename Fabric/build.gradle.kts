@@ -41,7 +41,7 @@ dependencies {
 
     implementation("com.electronwill.night-config:toml:${project.properties["nightconfig_version"]}")?.let { include(it) }
     implementation("com.electronwill.night-config:core:${project.properties["nightconfig_version"]}")?.let { include(it) }
-    "shadowBundle"("blue.endless:jankson:${project.properties["jankson_version"]}")
+    implementation("blue.endless:jankson:${project.properties["jankson_version"]}")?.let { "shadowBundle"(it) }
 }
 
 tasks {
