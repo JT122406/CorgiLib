@@ -33,6 +33,7 @@ public class AnnouncementInfoClientTicker {
                 announcementTimer--;
                 if (announcementTimer == 0) {
                     player.displayClientMessage(announcementInfo.title(), false);
+                    player.displayClientMessage(Component.empty(), false);
                     player.displayClientMessage(announcementInfo.desc(), false);
                     Component component = announcementInfo.actionButtonText();
                     MutableComponent open = ComponentUtils.wrapInSquareBrackets(component.copy().withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, announcementInfo.url())).withBold(true).withColor(ChatFormatting.GREEN)));
