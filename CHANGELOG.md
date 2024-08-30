@@ -1,3 +1,6 @@
+# 4.0.3.1
+* Add announcement config to post the message within 5 minutes in a user's chat. (Tracked per client.)
+
 # 4.0.3.0
 * Remove Imgui
 * Add announcement widget
