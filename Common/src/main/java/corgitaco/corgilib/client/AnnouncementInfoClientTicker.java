@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-import org.spongepowered.asm.launch.MixinBootstrap;
 
 import java.util.concurrent.ThreadLocalRandom;
 
