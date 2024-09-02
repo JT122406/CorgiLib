@@ -11,8 +11,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod(CorgiLib.MOD_ID)
 public class CorgiLibForge {
 
-    public CorgiLibForge() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public CorgiLibForge(FMLJavaModLoadingContext context) {
+        IEventBus modEventBus = context.getModEventBus();
         modEventBus.addListener(this::commonSetup);
         CorgiLib.init();
         ForgePlatform.CACHED.values().forEach(deferredRegister -> deferredRegister.register(modEventBus));

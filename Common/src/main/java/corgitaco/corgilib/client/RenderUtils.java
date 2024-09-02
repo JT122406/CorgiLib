@@ -10,15 +10,15 @@ public class RenderUtils {
 
     public static void drawFlatColoredSphere(Matrix4f pose, MultiBufferSource bufferSource, float radius, float originX, float originY, float originZ, float r, float g, float b, float a) {
         drawSphere(pose, bufferSource.getBuffer(RenderType.debugQuads()), radius, originX, originY, originZ, 15, 15, (pose1, consumer1, x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3) -> {
-            consumer1.vertex(pose1, x0, y0, z0).color(r, g, b, a).endVertex();
-            consumer1.vertex(pose1, x1, y1, z1).color(r, g, b, a).endVertex();
-            consumer1.vertex(pose1, x2, y2, z2).color(r, g, b, a).endVertex();
-            consumer1.vertex(pose1, x3, y3, z3).color(r, g, b, a).endVertex();
+            consumer1.addVertex(pose1, x0, y0, z0).setColor(r, g, b, a);
+            consumer1.addVertex(pose1, x1, y1, z1).setColor(r, g, b, a);
+            consumer1.addVertex(pose1, x2, y2, z2).setColor(r, g, b, a);
+            consumer1.addVertex(pose1, x3, y3, z3).setColor(r, g, b, a);
             // Renders inverse
-            consumer1.vertex(pose1, x3, y3, z3).color(r, g, b, a).endVertex();
-            consumer1.vertex(pose1, x2, y2, z2).color(r, g, b, a).endVertex();
-            consumer1.vertex(pose1, x1, y1, z1).color(r, g, b, a).endVertex();
-            consumer1.vertex(pose1, x0, y0, z0).color(r, g, b, a).endVertex();
+            consumer1.addVertex(pose1, x3, y3, z3).setColor(r, g, b, a);
+            consumer1.addVertex(pose1, x2, y2, z2).setColor(r, g, b, a);
+            consumer1.addVertex(pose1, x1, y1, z1).setColor(r, g, b, a);
+            consumer1.addVertex(pose1, x0, y0, z0).setColor(r, g, b, a);
         });
     }
 
@@ -59,15 +59,15 @@ public class RenderUtils {
 
     public static void drawRing(Matrix4f pose, MultiBufferSource bufferSource, float distance, float originX, float originY, float originZ, float r, float g, float b, float a) {
         drawRing(pose, bufferSource.getBuffer(RenderType.debugQuads()), distance, originX, originY, originZ, 15, 2, (pose1, vertexConsumer1, x1, y1, z1, x2, z2, y2) -> {
-            vertexConsumer1.vertex(pose, x1, y1, z1).color(r, g, b, a).endVertex();
-            vertexConsumer1.vertex(pose, x2, y1, z2).color(r, g, b, a).endVertex();
-            vertexConsumer1.vertex(pose, x2, y2, z2).color(r, g, b, a).endVertex();
-            vertexConsumer1.vertex(pose, x1, y2, z1).color(r, g, b, a).endVertex();
+            vertexConsumer1.addVertex(pose, x1, y1, z1).setColor(r, g, b, a);
+            vertexConsumer1.addVertex(pose, x2, y1, z2).setColor(r, g, b, a);
+            vertexConsumer1.addVertex(pose, x2, y2, z2).setColor(r, g, b, a);
+            vertexConsumer1.addVertex(pose, x1, y2, z1).setColor(r, g, b, a);
             // Render Inverse
-            vertexConsumer1.vertex(pose, x1, y2, z1).color(r, g, b, a).endVertex();
-            vertexConsumer1.vertex(pose, x2, y2, z2).color(r, g, b, a).endVertex();
-            vertexConsumer1.vertex(pose, x2, y1, z2).color(r, g, b, a).endVertex();
-            vertexConsumer1.vertex(pose, x1, y1, z1).color(r, g, b, a).endVertex();
+            vertexConsumer1.addVertex(pose, x1, y2, z1).setColor(r, g, b, a);
+            vertexConsumer1.addVertex(pose, x2, y2, z2).setColor(r, g, b, a);
+            vertexConsumer1.addVertex(pose, x2, y1, z2).setColor(r, g, b, a);
+            vertexConsumer1.addVertex(pose, x1, y1, z1).setColor(r, g, b, a);
         });
     }
 

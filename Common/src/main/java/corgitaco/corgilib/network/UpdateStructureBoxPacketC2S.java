@@ -1,7 +1,12 @@
 package corgitaco.corgilib.network;
 
+import corgitaco.corgilib.CorgiLib;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -10,29 +15,21 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import org.jetbrains.annotations.Nullable;
 
-public record UpdateStructureBoxPacketC2S(BlockPos pos, BlockPos structureOffset, BoundingBox box) implements Packet {
+public record UpdateStructureBoxPacketC2S(
+        BlockPos pos,
+        BlockPos structureOffset,
+        BoundingBox box
+) implements Packet {
 
-    @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeInt(pos.getX());
-        buf.writeInt(pos.getY());
-        buf.writeInt(pos.getZ());
+    public static final StreamCodec<RegistryFriendlyByteBuf, UpdateStructureBoxPacketC2S> CODEC = StreamCodec.composite(
+            ByteBufCodecs.fromCodec(BlockPos.CODEC), UpdateStructureBoxPacketC2S::pos,
+            ByteBufCodecs.fromCodec(BlockPos.CODEC), UpdateStructureBoxPacketC2S::structureOffset,
+            ByteBufCodecs.fromCodec(BoundingBox.CODEC), UpdateStructureBoxPacketC2S::box,
+            UpdateStructureBoxPacketC2S::new
+    );
 
-        buf.writeInt(structureOffset.getX());
-        buf.writeInt(structureOffset.getY());
-        buf.writeInt(structureOffset.getZ());
+    public static final CustomPacketPayload.Type<UpdateStructureBoxPacketC2S> TYPE = new CustomPacketPayload.Type<>(CorgiLib.createLocation("is_entity_inside_structure"));
 
-        buf.writeInt(box.minX());
-        buf.writeInt(box.minY());
-        buf.writeInt(box.minZ());
-        buf.writeInt(box.maxX());
-        buf.writeInt(box.maxY());
-        buf.writeInt(box.maxZ());
-    }
-
-    public static UpdateStructureBoxPacketC2S readFromPacket(FriendlyByteBuf buf) {
-        return new UpdateStructureBoxPacketC2S(new BlockPos(buf.readInt(), buf.readInt(), buf.readInt()), new BlockPos(buf.readInt(), buf.readInt(), buf.readInt()), new BoundingBox(buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt()));
-    }
 
     @Override
     public void handle(@Nullable Level level, @Nullable Player player) {
@@ -47,5 +44,10 @@ public record UpdateStructureBoxPacketC2S(BlockPos pos, BlockPos structureOffset
                 level.sendBlockUpdated(pos, blockState, blockState, 3);
             }
         }
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return null;
     }
 }

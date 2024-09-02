@@ -2,61 +2,91 @@ package corgitaco.corgilib.forge.network;
 
 import corgitaco.corgilib.CorgiLib;
 import corgitaco.corgilib.network.Packet;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.network.Channel;
+import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.network.payload.PayloadConnection;
+import net.minecraftforge.network.payload.PayloadFlow;
+import net.minecraftforge.network.payload.PayloadProtocol;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class ForgeNetworkHandler {
-    private static final String PROTOCOL_VERSION = "1";
-    public static final SimpleChannel SIMPLE_CHANNEL = NetworkRegistry.newSimpleChannel(
-            CorgiLib.createLocation("network"),
-            () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals,
-            PROTOCOL_VERSION::equals
-    );
+    public static final Channel<CustomPacketPayload> SIMPLE_CHANNEL = Util.make(() -> {
+        PayloadConnection<CustomPacketPayload> connection = ChannelBuilder.named(CorgiLib.createLocation("network")).payloadChannel();
 
-    public static void init() {
-        int idx = 0;
-        for (Map.Entry<String, Packet.Handler<?>> entry : Packet.PACKETS.entrySet()) {
-            registerMessage(idx++, entry.getValue());
+        PayloadProtocol<RegistryFriendlyByteBuf, CustomPacketPayload> play = connection.play();
+
+        for (Packet.Handler<?> packet : Packet.PACKETS) {
+
+            if (packet.direction() == Packet.PacketDirection.SERVER_TO_CLIENT) {
+                play = play.clientbound();
+                registerS2C(packet, (PayloadFlow) play);
+            }
+
+            if (packet.direction() == Packet.PacketDirection.CLIENT_TO_SERVER) {
+                play = play.serverbound();
+                registerC2S(packet, (PayloadFlow) play);
+            }
+
+            if (packet.direction() == Packet.PacketDirection.BI_DIRECTIONAL) {
+                play = play.bidirectional();
+                registerBiDirectional(packet, (PayloadFlow) play);
+            }
         }
+
+        return ((PayloadFlow) play).build();
+    });
+
+    public static void init() {}
+
+
+    private static <T extends Packet> void registerS2C(Packet.Handler<T> handler, PayloadFlow<RegistryFriendlyByteBuf, T> flow) {
+        flow.addMain(handler.type(), handler.serializer(), (t, context) -> {
+            context.enqueueWork(() -> handler.handle().handle(t, context.getSender().level(), context.getSender()));
+            context.setPacketHandled(true);
+        });
     }
 
-    public static <T extends Packet> void registerMessage(int idx, Packet.Handler<T> handler) {
-        SIMPLE_CHANNEL.registerMessage(idx, handler.clazz(), handler.write(), handler.read(), (t, contextSupplier) -> handle(t, contextSupplier, handler.handle()));
+    private static <T extends Packet> void registerC2S(Packet.Handler<T> handler, PayloadFlow<RegistryFriendlyByteBuf, T> flow) {
+        flow.addMain(handler.type(), handler.serializer(), (t, context) -> {
+            context.enqueueWork(() -> Client.clientHandle(t, handler.handle()));
+            context.setPacketHandled(true);
+        });
+    }
+
+    private static <T extends Packet> void registerBiDirectional(Packet.Handler<T> handler, PayloadFlow<RegistryFriendlyByteBuf, T> flow) {
+        flow.addMain(handler.type(), handler.serializer(), (t, context) -> {
+            if (FMLLoader.getDist() == Dist.CLIENT) {
+                if (context.isClientSide()) {
+                    Client.clientHandle(t, handler.handle());
+                }
+            } else {
+                handler.handle().handle(t, context.getSender().level(), context.getSender());
+            }
+            context.setPacketHandled(true);
+        });
     }
 
     public static <T extends Packet> void sendToPlayer(ServerPlayer playerEntity, T packet) {
-        SIMPLE_CHANNEL.sendTo(packet, playerEntity.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
-        SIMPLE_CHANNEL.sendTo(packet, playerEntity.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+        SIMPLE_CHANNEL.send(packet, playerEntity.connection.getConnection());
     }
 
     public static <T extends Packet> void sendToAllPlayers(List<ServerPlayer> playerEntities, T packet) {
         for (ServerPlayer playerEntity : playerEntities) {
-            SIMPLE_CHANNEL.sendTo(packet, playerEntity.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+            SIMPLE_CHANNEL.send(packet, playerEntity.connection.getConnection());
         }
     }
 
     public static <T extends Packet> void sendToServer(T packet) {
-        SIMPLE_CHANNEL.sendToServer(packet);
-    }
-
-    public static <T extends Packet> void handle(T packet, Supplier<NetworkEvent.Context> ctx, Packet.Handle<T> handle) {
-        NetworkEvent.Context context = ctx.get();
-        if (context.getDirection().getReceptionSide().isClient()) {
-            context.enqueueWork(() -> Client.clientHandle(packet, handle));
-        } else {
-            ServerPlayer sender = context.getSender();
-            handle.handle(packet, sender != null ? sender.level() : null, sender);
-        }
-        context.setPacketHandled(true);
+        SIMPLE_CHANNEL.send(packet, Minecraft.getInstance().getConnection().getConnection());
     }
 
     private static class Client {

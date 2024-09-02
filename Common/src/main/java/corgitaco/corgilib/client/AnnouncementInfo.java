@@ -14,6 +14,7 @@ import corgitaco.corgilib.platform.ModPlatform;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,9 +37,9 @@ public record AnnouncementInfo(Component title, Component desc, Component action
 
     public static final Codec<AnnouncementInfo> CODEC = RecordCodecBuilder.create(announcementInfoInstance ->
             announcementInfoInstance.group(
-                    ExtraCodecs.COMPONENT.fieldOf("title").forGetter(AnnouncementInfo::title),
-                    ExtraCodecs.COMPONENT.fieldOf("description").forGetter(AnnouncementInfo::desc),
-                    ExtraCodecs.COMPONENT.fieldOf("action_button_text").forGetter(AnnouncementInfo::actionButtonText),
+                    ComponentSerialization.CODEC.fieldOf("title").forGetter(AnnouncementInfo::title),
+                    ComponentSerialization.CODEC.fieldOf("description").forGetter(AnnouncementInfo::desc),
+                    ComponentSerialization.CODEC.fieldOf("action_button_text").forGetter(AnnouncementInfo::actionButtonText),
                     Codec.LONG.fieldOf("time").forGetter(AnnouncementInfo::timeStamp),
                     Codec.STRING.fieldOf("action_link").forGetter(AnnouncementInfo::url)
             ).apply(announcementInfoInstance, AnnouncementInfo::new)

@@ -30,7 +30,7 @@ public record CollectionCodec<TYPE, COLLECTION extends Collection<TYPE>>(Codec<T
             consumer.accept(t -> {
                 DataResult<Pair<TYPE, T>> decoded = element.decode(ops, t);
                 decoded.error().ifPresent(e -> errors.add(t));
-                result.add(decoded.get().orThrow().getFirst());
+                result.add(decoded.getOrThrow().getFirst());
             });
 
             return DataResult.success(Pair.of(result, ops.createList(errors.stream())));

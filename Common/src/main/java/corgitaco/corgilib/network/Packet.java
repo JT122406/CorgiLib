@@ -2,37 +2,36 @@ package corgitaco.corgilib.network;
 
 import corgitaco.corgilib.CorgiLib;
 import net.minecraft.Util;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface Packet {
-    Map<String, Handler<?>> PACKETS = Util.make(new HashMap<>(), map -> {
+public interface Packet extends CustomPacketPayload {
+    List<Handler<?>> PACKETS = Util.make(new ArrayList<>(), list -> {
         CorgiLib.LOGGER.info("Initializing network...");
-        map.put(CorgiLib.createLocation("is_entity_inside_structure").toString(), new Handler<>(EntityIsInsideStructureTrackerUpdatePacket.class, PacketDirection.SERVER_TO_CLIENT, EntityIsInsideStructureTrackerUpdatePacket::write, EntityIsInsideStructureTrackerUpdatePacket::readFromPacket, EntityIsInsideStructureTrackerUpdatePacket::handle));
-        map.put(CorgiLib.createLocation("update_structure").toString(), new Handler<>(UpdateStructureBoxPacketC2S.class, PacketDirection.CLIENT_TO_SERVER, UpdateStructureBoxPacketC2S::write, UpdateStructureBoxPacketC2S::readFromPacket, UpdateStructureBoxPacketC2S::handle));
+        list.add(new Handler<>(EntityIsInsideStructureTrackerUpdatePacket.TYPE, PacketDirection.SERVER_TO_CLIENT, EntityIsInsideStructureTrackerUpdatePacket.CODEC, EntityIsInsideStructureTrackerUpdatePacket::handle));
+        list.add(new Handler<>(UpdateStructureBoxPacketC2S.TYPE, PacketDirection.CLIENT_TO_SERVER, UpdateStructureBoxPacketC2S.CODEC, UpdateStructureBoxPacketC2S::handle));
         CorgiLib.LOGGER.info("Initialized network!");
     });
 
 
-    void write(FriendlyByteBuf buf);
-
     void handle(@Nullable Level level, @Nullable Player player);
 
-    record Handler<T extends Packet>(Class<T> clazz, PacketDirection direction, BiConsumer<T, FriendlyByteBuf> write,
-                                     Function<FriendlyByteBuf, T> read,
-                                     Handle<T> handle) {
+
+    record Handler<T extends Packet>(Type<T> type, PacketDirection direction,
+                                     StreamCodec<RegistryFriendlyByteBuf, T> serializer, Handle<T> handle) {
     }
 
     enum PacketDirection {
         SERVER_TO_CLIENT,
-        CLIENT_TO_SERVER
+        CLIENT_TO_SERVER,
+        BI_DIRECTIONAL
     }
 
     @FunctionalInterface

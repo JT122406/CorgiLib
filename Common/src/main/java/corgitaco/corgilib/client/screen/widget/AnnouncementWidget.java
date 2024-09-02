@@ -47,7 +47,7 @@ public class AnnouncementWidget extends AbstractWidget {
 
         int buttonSpacing = (int) (announcement.getWidth() * 0.04);
 
-        Button takeMeThere = new Button.Builder(announcementInfo.actionButtonText(), ConfirmLinkScreen.confirmLink(announcementInfo.url(), Minecraft.getInstance().screen, false)).pos(renderX, renderY + yOffset).width(buttonWidth).build();
+        Button takeMeThere = new Button.Builder(announcementInfo.actionButtonText(), ConfirmLinkScreen.confirmLink(Minecraft.getInstance().screen, announcementInfo.url())).pos(renderX, renderY + yOffset).width(buttonWidth).build();
 
         addRenderableWidget(takeMeThere);
 
@@ -125,7 +125,7 @@ public class AnnouncementWidget extends AbstractWidget {
             guiGraphics.fill(getX(), getY(), getX() + getWidth(), getY() + getHeight(), FastColor.ARGB32.color(255, 255, 0, 0));
             guiGraphics.setColor(0.3F, 0.3F, 0.3F, 1);
 
-            guiGraphics.blit(Screen.BACKGROUND_LOCATION, getX() + 1, getY() + 1, getWidth() - 2, getHeight() - 2, 0.0F, 0.0F, this.width, this.height, 32, 32);
+            guiGraphics.blit(Screen.MENU_BACKGROUND, getX() + 1, getY() + 1, getWidth() - 2, getHeight() - 2, 0.0F, 0.0F, this.width, this.height, 32, 32);
             guiGraphics.setColor(1, 1, 1, 1);
 
             for (Renderable child : this.children) {

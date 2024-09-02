@@ -4,8 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import corgitaco.corgilib.comparator.DoubleComparator;
 import corgitaco.corgilib.serialization.codec.CodecUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +30,7 @@ public class AttributeCondition implements Condition {
             return false;
         }
         for (Map.Entry<Attribute, DoubleComparator> entry : entries) {
-            AttributeInstance attribute = conditionContext.entity().getAttribute(entry.getKey());
+            AttributeInstance attribute = conditionContext.entity().getAttribute(BuiltInRegistries.ATTRIBUTE.wrapAsHolder(entry.getKey()));
             if (attribute == null) {
                 return false;
             }

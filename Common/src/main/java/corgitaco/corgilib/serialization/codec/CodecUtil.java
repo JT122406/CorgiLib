@@ -37,7 +37,6 @@ public class CodecUtil {
     public static final Codec<EntityType<?>> ENTITY_TYPE_CODEC = createLoggedExceptionRegistryCodec(BuiltInRegistries.ENTITY_TYPE);
     public static final Codec<Attribute> ATTRIBUTE_CODEC = createLoggedExceptionRegistryCodec(BuiltInRegistries.ATTRIBUTE);
     public static final Codec<Item> ITEM_CODEC = createLoggedExceptionRegistryCodec(BuiltInRegistries.ITEM);
-    public static final Codec<Enchantment> ENCHANTMENT_CODEC = createLoggedExceptionRegistryCodec(BuiltInRegistries.ENCHANTMENT);
     public static final Codec<MobEffect> EFFECT_CODEC = createLoggedExceptionRegistryCodec(BuiltInRegistries.MOB_EFFECT);
 
     public static final Codec<ResourceKey<Biome>> BIOME_CODEC = ResourceLocation.CODEC.comapFlatMap(resourceLocation -> DataResult.success(ResourceKey.create(Registries.BIOME, resourceLocation)), ResourceKey::location);

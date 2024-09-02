@@ -3,7 +3,6 @@ package corgitaco.corgilib.core;
 import com.mojang.serialization.Codec;
 import corgitaco.corgilib.CorgiLib;
 import corgitaco.corgilib.entity.condition.Condition;
-import corgitaco.corgilib.entity.npc.VillagerTradeRegistry;
 import corgitaco.corgilib.math.blendingfunction.BlendingFunction;
 import corgitaco.corgilib.platform.ModPlatform;
 import net.minecraft.core.Registry;
@@ -28,7 +27,7 @@ public class CorgiLibRegistry {
 
     public static void init() {
         BlendingFunction.register();
-        VillagerTradeRegistry.register();
+//        VillagerTradeRegistry.register();
         Condition.register();
     }
 }

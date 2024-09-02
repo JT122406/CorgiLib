@@ -99,7 +99,7 @@ public class JanksonUtil {
 
     public static <T> void createConfig(Path path, Codec<T> codec, String header, Map<String, String> comments, DynamicOps<JsonElement> ops, T from) {
         DataResult<JsonElement> dataResult = codec.encodeStart(ops, from);
-        Optional<DataResult.PartialResult<JsonElement>> error = dataResult.error();
+        Optional<DataResult.Error<JsonElement>> error = dataResult.error();
         if (error.isPresent()) {
             throw new IllegalArgumentException(String.format("Jankson file creation for \"%s\" failed due to the following error(s): %s", path.toString(), error.get().message()));
         }
@@ -125,7 +125,7 @@ public class JanksonUtil {
             load = JANKSON.loadElement(configStringFromBytes(path).strip());
 
             DataResult<Pair<T, JsonElement>> decode = codec.decode(ops, load);
-            Optional<DataResult.PartialResult<Pair<T, JsonElement>>> error = decode.error();
+            Optional<DataResult.Error<Pair<T, JsonElement>>> error = decode.error();
             if (error.isPresent()) {
                 IllegalArgumentException illegalArgumentException = new IllegalArgumentException(String.format("Jankson file reading for \"%s\" failed due to the following error(s): %s", path, error.get().message()));
                 thrown = illegalArgumentException;

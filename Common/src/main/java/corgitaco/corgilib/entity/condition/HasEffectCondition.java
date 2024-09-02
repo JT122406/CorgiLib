@@ -3,6 +3,7 @@ package corgitaco.corgilib.entity.condition;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import corgitaco.corgilib.serialization.codec.CodecUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 
 import java.util.List;
@@ -31,9 +32,9 @@ public class HasEffectCondition implements Condition {
     public boolean passes(ConditionContext conditionContext) {
         for (MobEffect effect : this.effects) {
             if (hasAny) {
-                return conditionContext.entity().hasEffect(effect);
+                return conditionContext.entity().hasEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect));
             } else {
-                if (!conditionContext.entity().hasEffect(effect)) {
+                if (!conditionContext.entity().hasEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect))) {
                     return false;
                 }
             }

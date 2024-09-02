@@ -9,7 +9,7 @@ import net.minecraft.util.ExtraCodecs;
 import java.util.function.Function;
 
 public interface BlendingFunction {
-    Codec<BlendingFunction> CODEC = ExtraCodecs.lazyInitializedCodec(() -> CorgiLibRegistry.BLENDING_FUNCTION.get().byNameCodec().dispatchStable(BlendingFunction::codec, Function.identity()));
+    Codec<BlendingFunction> CODEC = Codec.lazyInitialized(() -> CorgiLibRegistry.BLENDING_FUNCTION.get().byNameCodec().dispatchStable(BlendingFunction::codec, Function.identity()));
 
     Codec<? extends BlendingFunction> codec();
 

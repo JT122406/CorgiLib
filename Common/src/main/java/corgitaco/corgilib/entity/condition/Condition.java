@@ -8,7 +8,8 @@ import net.minecraft.util.ExtraCodecs;
 import java.util.function.Function;
 
 public interface Condition {
-    Codec<Condition> CODEC = ExtraCodecs.lazyInitializedCodec(() ->  CorgiLibRegistry.CONDITION.get().byNameCodec().dispatchStable(Condition::codec, Function.identity()));
+    Codec< Condition> CODEC = Codec.<Condition>lazyInitialized(() ->  CorgiLibRegistry.CONDITION.get().byNameCodec().dispatch(Condition::codec, Function.identity()));
+
     boolean passes(ConditionContext conditionContext);
 
     Codec<? extends Condition> codec();
