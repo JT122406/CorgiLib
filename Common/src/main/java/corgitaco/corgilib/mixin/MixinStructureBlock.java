@@ -21,9 +21,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(StructureBlock.class)
 public class MixinStructureBlock {
 
-    @Inject(method = "use", at = @At("HEAD"), cancellable = true)
-    private void bindBox(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result, CallbackInfoReturnable<InteractionResult> cir) {
-        if (player.getItemInHand(hand).is(Items.GOLDEN_AXE)) {
+    @Inject(method = "useWithoutItem", at = @At("HEAD"), cancellable = true)
+    private void bindBox(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+        if (player.getItemInHand(InteractionHand.MAIN_HAND).is(Items.GOLDEN_AXE)) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof StructureBlockEntity structureBlockEntity) {
                 if (level.isClientSide) {

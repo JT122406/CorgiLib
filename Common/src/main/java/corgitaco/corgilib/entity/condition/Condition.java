@@ -1,6 +1,7 @@
 package corgitaco.corgilib.entity.condition;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import corgitaco.corgilib.core.CorgiLibRegistry;
 import corgitaco.corgilib.platform.ModPlatform;
 import net.minecraft.util.ExtraCodecs;
@@ -8,7 +9,7 @@ import net.minecraft.util.ExtraCodecs;
 import java.util.function.Function;
 
 public interface Condition {
-    Codec< Condition> CODEC = Codec.<Condition>lazyInitialized(() ->  CorgiLibRegistry.CONDITION.get().byNameCodec().dispatch(Condition::codec, Function.identity()));
+    Codec<Condition> CODEC = Codec.lazyInitialized(() ->  CorgiLibRegistry.CONDITION.get().byNameCodec().dispatchStable(Condition::codec, MapCodec::assumeMapUnsafe));
 
     boolean passes(ConditionContext conditionContext);
 

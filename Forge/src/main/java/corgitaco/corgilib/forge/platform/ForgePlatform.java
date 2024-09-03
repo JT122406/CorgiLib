@@ -66,7 +66,7 @@ public class ForgePlatform implements ModPlatform {
             mappedRegistry.unfreeze();
         }
 
-        Registry<T> registry = BuiltInRegistries.registerSimple(registryKey, Lifecycle.stable(), builder -> (T) new Object());
+        Registry<T> registry = BuiltInRegistries.registerSimple(registryKey, builder -> new Object());
 
         if (BuiltInRegistries.REGISTRY instanceof MappedRegistry<? extends Registry<?>> mappedRegistry) { // Relock the registry
             mappedRegistry.freeze();
