@@ -42,6 +42,7 @@ dependencies {
 
     "common"(project(":Common", "namedElements")) { isTransitive = false }
     "shadowBundle"(project(":Common", "transformProductionNeoForge"))
+    implementation("blue.endless:jankson:${project.properties["jankson_version"]}")?.let { "shadowBundle"(it) }
 }
 
 tasks {

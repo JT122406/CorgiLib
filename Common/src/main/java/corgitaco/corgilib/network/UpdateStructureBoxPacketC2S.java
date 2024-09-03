@@ -28,7 +28,7 @@ public record UpdateStructureBoxPacketC2S(
             UpdateStructureBoxPacketC2S::new
     );
 
-    public static final CustomPacketPayload.Type<UpdateStructureBoxPacketC2S> TYPE = new CustomPacketPayload.Type<>(CorgiLib.createLocation("is_entity_inside_structure"));
+    public static final CustomPacketPayload.Type<UpdateStructureBoxPacketC2S> TYPE = new CustomPacketPayload.Type<>(CorgiLib.createLocation("update_structure"));
 
 
     @Override
