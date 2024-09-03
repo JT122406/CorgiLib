@@ -2,19 +2,18 @@ package dev.corgitaco.corgilib.neoforge.platform;
 
 import com.google.auto.service.AutoService;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.Lifecycle;
 import corgitaco.corgilib.CorgiLib;
 import corgitaco.corgilib.platform.ModPlatform;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegistryBuilder;
 import net.neoforged.neoforgespi.language.IModInfo;
 
 import java.nio.file.Path;
@@ -28,6 +27,7 @@ import java.util.function.Supplier;
 @AutoService(ModPlatform.class)
 public class NeoForgePlatform implements ModPlatform {
 
+    public static final List<Consumer<NewRegistryEvent>> NEW_REGISTRIES = new ArrayList<>();
 
     @Override
     public String getPlatformName() {
@@ -63,16 +63,9 @@ public class NeoForgePlatform implements ModPlatform {
 
     @Override
     public <T> Supplier<Registry<T>> createSimpleBuiltin(ResourceKey<Registry<T>> registryKey) {
-        if (BuiltInRegistries.REGISTRY instanceof MappedRegistry<? extends Registry<?>> mappedRegistry) { // We have to unlock the registry first
-            mappedRegistry.unfreeze();
-        }
-
-        Registry<T> registry = BuiltInRegistries.registerSimple(registryKey, builder -> new Object());
-
-        if (BuiltInRegistries.REGISTRY instanceof MappedRegistry<? extends Registry<?>> mappedRegistry) { // Relock the registry
-            mappedRegistry.freeze();
-        }
-        return () -> registry;
+        Registry<T> ts = new RegistryBuilder<>(registryKey).sync(true).create();
+        NEW_REGISTRIES.add(newRegistryEvent -> newRegistryEvent.register(ts));
+        return () -> ts;
     }
 
     public static final List<Consumer<DataPackRegistryEvent.NewRegistry>> DATAPACK_REGISTRIES = new ArrayList<>();

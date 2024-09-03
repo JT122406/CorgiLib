@@ -1,19 +1,12 @@
 package dev.corgitaco.corgilib.neoforge;
 
 import corgitaco.corgilib.CorgiLib;
-import corgitaco.corgilib.network.Packet;
 import dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatform;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-
-import java.util.Map;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 /**
  * Main class for the mod on the NeoForge platform.
@@ -24,8 +17,9 @@ public class CorgiLibNeoForge {
         modEventBus.addListener(this::commonSetup);
         CorgiLib.init();
         NeoForgePlatform.CACHED.values().forEach(deferredRegister -> deferredRegister.register(modEventBus));
+        modEventBus.addListener(DataPackRegistryEvent.NewRegistry.class, newRegistry -> NeoForgePlatform.DATAPACK_REGISTRIES.forEach(newRegistryConsumer -> newRegistryConsumer.accept(newRegistry)));
+        modEventBus.addListener(NewRegistryEvent.class, newRegistry -> NeoForgePlatform.NEW_REGISTRIES.forEach(newRegistryConsumer -> newRegistryConsumer.accept(newRegistry)));
     }
-
 
 
     private void commonSetup(final FMLCommonSetupEvent event) {
