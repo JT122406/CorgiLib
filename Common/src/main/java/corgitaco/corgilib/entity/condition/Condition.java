@@ -42,6 +42,7 @@ public interface Condition {
         register("is_type", EntityTypeFilter.CODEC);
         register("is_type_tag", EntityTypeTagFilter.CODEC);
         register("conditions_pass", ConditionsPassCondition.CODEC);
+        register("any_conditions_passes", AnyConditionPassesCondition.CODEC);
         register("is_mob_category", IsMobCategoryCondition.CODEC);
         register("any", AnyCondition.CODEC);
     }
