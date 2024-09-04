@@ -1,3 +1,6 @@
+# 5.0.0.2
+* Add `any_conditions_passes` entity condition.
+
 # 5.0.0.1
 * Fix NeoForge Missing AccessTransformer
 
