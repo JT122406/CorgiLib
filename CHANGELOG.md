@@ -1,3 +1,6 @@
+# 4.0.3.2
+* Add `any_conditions_passes` entity condition.
+
 # 4.0.3.1
 * Add announcement config to post the message within 5 minutes in a user's chat. (Tracked per client.)
 * Run Announcement Info getter off main thread and in the background executor (prevents game hang if json does not exist online).
