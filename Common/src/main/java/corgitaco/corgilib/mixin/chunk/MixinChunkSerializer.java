@@ -47,7 +47,7 @@ public class MixinChunkSerializer {
         if (tag.contains("corgilib")) {
             CompoundTag corgiLibTag = tag.getCompound("corgilib");
             if (corgiLibTag.contains("scheduled_random_ticks", Tag.TAG_LIST)) {
-                for (Tag scheduledTick : tag.getList("scheduled_random_ticks", Tag.TAG_COMPOUND)) {
+                for (Tag scheduledTick : corgiLibTag.getList("scheduled_random_ticks", Tag.TAG_COMPOUND)) {
                     ((RandomTickScheduler) cir.getReturnValue()).getScheduledRandomTicks().add(NbtUtils.readBlockPos((CompoundTag) scheduledTick));
                 }
             }
