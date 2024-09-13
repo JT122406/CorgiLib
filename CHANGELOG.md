@@ -1,3 +1,7 @@
+# 5.0.0.3
+* Serialize the right info for scheduled random ticks
+* Fix ForgePlatformNetwork missing AutoService
+
 # 5.0.0.2
 * Add `any_conditions_passes` entity condition.
 
